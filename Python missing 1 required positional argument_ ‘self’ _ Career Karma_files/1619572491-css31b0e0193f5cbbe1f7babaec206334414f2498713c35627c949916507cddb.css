@@ -1,0 +1,26 @@
+/* https://fonts.googleapis.com/css?family=Open+Sans%3A300%2C400%2C600%2C700%2C800&#038;ver=5.7.1 */
+@font-face{font-display:swap;
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 300;src:url(https://fonts.gstatic.com/s/opensans/v18/mem5YaGs126MiZpBA-UN_r8OUuhv.woff) format('woff');
+}
+@font-face{font-display:swap;
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 400;src:url(https://fonts.gstatic.com/s/opensans/v18/mem8YaGs126MiZpBA-UFVZ0d.woff) format('woff');
+}
+@font-face{font-display:swap;
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 600;src:url(https://fonts.gstatic.com/s/opensans/v18/mem5YaGs126MiZpBA-UNirkOUuhv.woff) format('woff');
+}
+@font-face{font-display:swap;
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 700;src:url(https://fonts.gstatic.com/s/opensans/v18/mem5YaGs126MiZpBA-UN7rgOUuhv.woff) format('woff');
+}
+@font-face{font-display:swap;
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 800;src:url(https://fonts.gstatic.com/s/opensans/v18/mem5YaGs126MiZpBA-UN8rsOUuhv.woff) format('woff');
+}

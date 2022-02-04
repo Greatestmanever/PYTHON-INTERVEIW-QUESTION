@@ -1,0 +1,11 @@
+/* https://fonts.googleapis.com/css?family=Droid+Serif%3A400%2C700&#038;ver=5.7.1 */
+@font-face{font-display:swap;
+  font-family: 'Droid Serif';
+  font-style: normal;
+  font-weight: 400;src:url(https://fonts.gstatic.com/s/droidserif/v13/tDbI2oqRg1oM3QBjjcaDkOr9rAM.woff) format('woff');
+}
+@font-face{font-display:swap;
+  font-family: 'Droid Serif';
+  font-style: normal;
+  font-weight: 700;src:url(https://fonts.gstatic.com/s/droidserif/v13/tDbV2oqRg1oM3QBjjcaDkOJGiRD7Owc.woff) format('woff');
+}

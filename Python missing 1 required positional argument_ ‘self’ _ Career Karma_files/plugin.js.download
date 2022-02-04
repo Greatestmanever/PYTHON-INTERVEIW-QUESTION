@@ -1,0 +1,223 @@
+jQuery(document).ready(function() {
+jQuery('#phone_number')
+	.keydown(function (e) {
+
+	if(e.key == '(' || e.key == ')' || e.key == '#'  
+	   || e.key == '-' || e.key == '*' || e.key == '|'
+	|| e.key == '/'	|| e.key == '{' || e.key == ']'
+	|| e.key == '[' || e.key == '}'){
+		return false;
+	}
+
+		var key = e.which || e.charCode || e.keyCode || 0;
+		$phone = jQuery(this);
+
+    // Don't let them remove the starting '('
+    if ($phone.val().length === 1 && (key === 8 || key === 46)) {
+			$phone.val('+1 ('); 
+      return false;
+		} 
+    // Reset if they highlight and type over first char.
+    else if ($phone.val().charAt(0) !== '+1 (') {
+			/*$phone.val('+1('+String.fromCharCode(e.keyCode)+''); */
+		}
+
+		// Auto-format- do not expose the mask as the user begins to type
+		if (key !== 8 && key !== 9) {
+			if ($phone.val().length === 7) {
+				$phone.val($phone.val() + ') ');
+			}
+			if ($phone.val().length === 12) {
+				$phone.val($phone.val() + ' ');
+			}
+			if ($phone.val().length === 13) {
+				$phone.val($phone.val() + '-');
+			}
+		}
+
+		// Allow numeric (and tab, backspace, delete) keys only
+
+		return (key == 8 || 
+				key == 9 ||
+				key == 16 || 
+				key == 46 ||
+				(key >= 48 && key <= 57) ||
+				(key >= 96 && key <= 105));
+	})
+  .keypress(function () {
+    $phone = jQuery(this);
+    if ($phone.val().length === 0) {
+      $phone.val('+1 (' + $phone.val());
+    } else if ( $phone.val().substring(0,4) !== '+1 ('){
+      $phone.val('+1 (');
+    }
+  })
+	.bind('change focus click', function () {
+		$phone = jQuery(this);
+		if ($phone.val().length === 0) {
+			$phone.val('+1 (');
+		} else if ( $phone.val().substring(0,4) !== '+1 ('){
+      $phone.val('+1 (');
+    } else {
+			var val = $phone.val();
+			$phone.val('').val(val); // Ensure cursor remains at the end
+		}
+	})
+	.blur(function () {
+		$phone = jQuery(this);
+		if ($phone.val() === '+1 (') {
+			$phone.val('');
+		}
+	});
+
+  var isDisplayer = false;
+
+  function showGclid(){
+	var pattern = /[?&]gclid=/;
+	var URL = location.search;
+	if(pattern.test(URL))
+	{
+		jQuery("#fast-track-modal-window").show();
+	}
+ }
+
+  /* display after 10 seconds*/
+  setTimeout(function(){ 
+  	if(!isDisplayer && getCookie("fastTrackModal") != "fastTrackModal_displayed")
+  	{
+  		jQuery("#fast-track-modal-window").show();	
+      		onOpenModal();
+  		isDisplayer = true;
+  	} else {
+		showGclid();
+	}
+  }, 15000);
+
+  /*modal close window*/
+  jQuery( "#fast-track-modal-window-close" ).on( "click", function() {
+    isDisplayer = true;
+    jQuery("#fast-track-modal-window").hide();	
+    setCookie ("fastTrackModal", "fastTrackModal_displayed", 24);
+    onClodeModal();
+  });
+
+  /*Get Mtached Modal button*/
+  jQuery( "#lp-pom-button-13" ).on( "click", function(e) {
+    if(jQuery("#fast-track-modal-form")[0].checkValidity()){
+      e.preventDefault();
+      isDisplayer = true;
+      jQuery("#fast-track-modal-window").hide();  
+      setCookie ("fastTrackModal", "fastTrackModal_displayed", 24);
+      onGetMatched();
+    }
+  });
+
+  jQuery('.trigger-fast-track-modal').on( "click", function(e) {
+     jQuery("#fast-track-modal-window").show();
+  });
+
+
+  /* display exit intent */
+  function onMouseOut(event) {
+    if (
+      event.clientY < 50 &&
+      event.relatedTarget == null &&
+      event.target.nodeName.toLowerCase() !== 'select') 
+    {
+      document.removeEventListener("mouseout", onMouseOut);
+      if(!isDisplayer && getCookie("fastTrackModal") != "fastTrackModal_displayed"){
+      	jQuery("#fast-track-modal-window").show();		
+        onOpenModal();
+      } else {
+		showGclid();
+	}
+    }
+  }
+  document.addEventListener("mouseout", onMouseOut);
+
+
+  function onOpenModal(){
+	analytics.track("Blog - Modal Displayed", {
+          url: document.URL,
+          article: jQuery("h1").text(),
+          category: document.URL.split('/')[4],
+          source: "blog",
+          referrer: document.referrer,
+          referrerDomain: document.referrer.split('/')[2]
+        });
+  }
+
+
+  function onClodeModal(){
+	analytics.track("Blog - Modal Close Button Clicked", {
+	  url: document.URL,
+	  article: document.URL.split('/')[4],
+	  category: jQuery("ul.trail-items li span:eq(1)").text(),
+	  source: "blog",
+	  referrer: document.referrer,
+	  referrerDomain: document.referrer.split('/')[2]
+	});
+  }
+
+  function onGetMatched(){
+    analytics.track("Blog - Modal Main Button Clicked", {
+              url: document.URL,
+              article: document.URL.split('/')[4],
+              category: jQuery("ul.trail-items li span:eq(1)").text(),
+              source: "blog",
+              referrer: document.referrer,
+              referrerDomain: document.referrer.split('/')[2]
+    });
+
+    //event track
+    const firstFtCTA = localStorage.getItem('firstFtCTA');
+
+    if( !firstFtCTA ){
+          localStorage.setItem('firstFtCTA', "blog-modal-cta");
+          localStorage.setItem('firstFtCTAPath', document.URL);
+     }
+
+    localStorage.setItem('lastFtCTA', "blog-modal-cta");
+    localStorage.setItem('lastFtCTAPath', document.URL);
+
+    analytics.identify({
+          ...(firstFtCTA ? {} : {
+          firstFtCTA: localStorage.getItem('firstFtCTA'),
+          firstFtCTAPath: localStorage.getItem('firstFtCTAPath')
+    }),
+      lastFtCTA: "blog-modal-cta",
+      lastFtCTAPath: document.URL,
+    });
+
+    var url = jQuery("#fast-track-modal-form").serialize();
+	url = url.replace(/\/$/, '');
+	url = url.replace('+(','');
+	url = url.replace(')+','');
+	url = url.replace(' ','');
+	url = url.replace('+-',''); 
+
+   window.open(
+	'https://careerkarma.com/fasttrack/sign-up/?'+url,
+	'_blank' // <- This is what makes it open in a new window.
+   );
+
+//    jQuery(location).attr('href', 'https://careerkarma.com/fasttrack/sign-up/?'+url);
+    return false;
+  }
+
+  /*set cookie*/
+  function setCookie (key, value, hours) {
+      var date = new Date();
+      date.setTime(+ date + (hours * 3600000)); 
+      window.document.cookie = key + "=" + value + "; expires=" + date.toGMTString() + "; path=/";
+
+      return value;
+  };
+
+  /*get cookie*/
+  function getCookie (name) {
+    var value = `; ${document.cookie}`;
+    var parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+  }
+});
